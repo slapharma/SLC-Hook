@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOOK — AI-Powered Creator Growth Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&family=Syne:wght@800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#080810;--surface:#0F0F1A;--surface2:#161625;
+    --violet:#7C3AED;--violet-light:#9D5CF5;--violet-dim:rgba(124,58,237,0.15);
+    --cyan:#06B6D4;--cyan-dim:rgba(6,182,212,0.15);
+    --red:#F43F5E;--gold:#F59E0B;
+    --text:#F8FAFC;--text2:#94A3B8;--text3:#64748B;
+    --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  }
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;height:100vh;overflow:hidden}
+
+  /* SIDEBAR */
+  .sidebar{width:220px;min-width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:20px 0}
+  .logo{padding:0 20px 24px;border-bottom:1px solid var(--border)}
+  .logo-text{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1}
+  .logo-h,.logo-k{color:var(--text)}
+  .logo-o{background:linear-gradient(135deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;position:relative}
+  .logo-tag{font-size:9px;letter-spacing:2px;color:var(--text3);margin-top:4px;text-transform:uppercase}
+  .nav{padding:16px 0;flex:1}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;color:var(--text2);font-size:13px;font-weight:500;border-right:2px solid transparent;transition:all 0.15s}
+  .nav-item:hover{color:var(--text);background:var(--surface2)}
+  .nav-item.active{color:var(--violet-light);background:var(--violet-dim);border-right-color:var(--violet)}
+  .nav-icon{width:16px;height:16px;opacity:0.8}
+  .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+  .plan-badge{background:var(--violet-dim);border:1px solid rgba(124,58,237,0.3);border-radius:6px;padding:8px 10px}
+  .plan-name{font-size:11px;font-weight:600;color:var(--violet-light)}
+  .plan-credits{font-size:10px;color:var(--text3);margin-top:2px}
+  .upgrade-btn{display:block;margin-top:8px;background:var(--violet);color:#fff;border:none;border-radius:6px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;width:100%;text-align:center}
+
+  /* MAIN */
+  .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .topbar-greeting{font-size:15px;font-weight:600}
+  .topbar-greeting span{color:var(--text2);font-weight:400}
+  .topbar-right{display:flex;align-items:center;gap:12px}
+  .credits-pill{background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px}
+  .credits-dot{width:6px;height:6px;background:var(--gold);border-radius:50%}
+  .upgrade-pill{background:linear-gradient(135deg,var(--violet),#5B21B6);color:#fff;border:none;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:600;cursor:pointer}
+  .avatar{width:32px;height:32px;background:linear-gradient(135deg,var(--violet),var(--cyan));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+
+  .content{flex:1;overflow-y:auto;padding:24px}
+  .screen{display:none;animation:fadeIn 0.2s ease}
+  .screen.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+  /* COMMON COMPONENTS */
+  .page-title{font-size:20px;font-weight:700;margin-bottom:4px}
+  .page-sub{font-size:13px;color:var(--text2);margin-bottom:20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px}
+  .card-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .stat-value{font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;margin-bottom:4px}
+  .stat-label{font-size:12px;color:var(--text2)}
+  .stat-delta{font-size:11px;font-weight:600;margin-top:4px}
+  .stat-delta.up{color:#34D399}
+  .badge{display:inline-flex;align-items:center;gap:4px;border-radius:20px;padding:3px 8px;font-size:11px;font-weight:600}
+  .badge-red{background:rgba(244,63,94,0.15);color:#FB7185}
+  .badge-yellow{background:rgba(245,158,11,0.15);color:#FCD34D}
+  .badge-green{background:rgba(52,211,153,0.15);color:#34D399}
+  .badge-cyan{background:var(--cyan-dim);color:var(--cyan)}
+  .badge-violet{background:var(--violet-dim);color:var(--violet-light)}
+  .badge-gray{background:rgba(148,163,184,0.1);color:var(--text2)}
+  .btn{border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s}
+  .btn-violet{background:var(--violet);color:#fff}
+  .btn-violet:hover{background:var(--violet-light)}
+  .btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+  .btn-ghost:hover{background:var(--surface2);color:var(--text)}
+  .platform-row{display:flex;gap:6px;align-items:center}
+  .platform-icon{width:20px;height:20px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .platform-x{background:#000;color:#fff;border:1px solid #333}
+  .platform-tt{background:rgba(0,0,0,0.8);color:#ff0050;border:1px solid #333}
+  .platform-ig{background:linear-gradient(135deg,#833AB4,#FD1D1D,#F77737);color:#fff}
+  .platform-li{background:#0077B5;color:#fff}
+  .progress-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:8px}
+  .progress-fill{height:100%;border-radius:2px;transition:width 1s ease}
+  .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .section-title{font-size:14px;font-weight:600}
+  .divider{height:1px;background:var(--border);margin:16px 0}
+  .tag{display:inline-block;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 7px;font-size:11px;color:var(--text2);margin:2px}
+
+  /* TREND DOTS */
+  .pulse-dot{width:8px;height:8px;border-radius:50%;display:inline-block;position:relative}
+  .pulse-dot::after{content:'';position:absolute;inset:-3px;border-radius:50%;animation:pulse 2s infinite}
+  .dot-red{background:var(--red)}.dot-red::after{background:rgba(244,63,94,0.3)}
+  .dot-yellow{background:var(--gold)}.dot-yellow::after{background:rgba(245,158,11,0.3)}
+  .dot-green{background:#34D399}.dot-green::after{background:rgba(52,211,153,0.3)}
+  .dot-gray{background:var(--text3)}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:0.6}50%{transform:scale(1.8);opacity:0}}
+
+  /* SPARKLINE */
+  .sparkline{display:block}
+
+  /* OPPORTUNITY SCORE */
+  .opp-score{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500}
+  .opp-label{font-size:10px;color:var(--text3);margin-left:2px}
+
+  /* HOOK CARD */
+  .hook-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;margin-bottom:8px;cursor:pointer;transition:all 0.15s}
+  .hook-card:hover{border-color:rgba(124,58,237,0.4)}
+  .hook-card.selected{border-color:var(--violet);background:var(--violet-dim)}
+  .hook-text{font-size:14px;font-weight:600;line-height:1.5;margin-bottom:10px}
+  .hook-meta{display:flex;align-items:center;gap:10px}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;padding:8px 12px;font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.5px;border-bottom:1px solid var(--border)}
+  td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border)}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:rgba(255,255,255,0.02)}
+
+  /* HEATMAP */
+  .heatmap{display:grid;grid-template-columns:repeat(8,1fr);gap:3px}
+  .heat-cell{height:20px;border-radius:3px;background:rgba(255,255,255,0.04)}
+  .heat-1{background:rgba(124,58,237,0.2)}
+  .heat-2{background:rgba(124,58,237,0.4)}
+  .heat-3{background:rgba(124,58,237,0.65)}
+  .heat-4{background:var(--violet)}
+
+  /* CAMPAIGN CARD */
+  .campaign-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;transition:all 0.15s}
+  .campaign-card:hover{border-color:var(--border2)}
+  .campaign-name{font-size:14px;font-weight:700;margin-bottom:6px}
+  .campaign-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .c-stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500}
+  .c-stat-lbl{font-size:10px;color:var(--text3)}
+
+  /* CHART SVG */
+  .chart-wrap{width:100%;overflow:hidden}
+
+  /* TREND CARD */
+  .trend-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;transition:all 0.15s}
+  .trend-card:hover{border-color:var(--border2)}
+  .trend-card.featured{border-color:rgba(244,63,94,0.4);box-shadow:0 0 20px rgba(244,63,94,0.08)}
+  .trend-keyword{font-size:15px;font-weight:700;margin:8px 0 4px}
+  .trend-category{font-size:11px;color:var(--text3)}
+  .trend-window{font-size:11px;color:var(--text2);margin-top:6px}
+
+  /* POST PREVIEW */
+  .post-preview{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:14px;font-size:13px;line-height:1.6;color:var(--text2)}
+  .post-preview strong{color:var(--text)}
+  .hashtag{color:var(--cyan)}
+  .cta-line{margin-top:8px;padding-top:8px;border-top:1px solid var(--border);color:var(--violet-light);font-weight:600}
+
+  /* ANALYTICS CHART */
+  .chart-container{position:relative;height:180px}
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar{width:4px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+  /* FILTER BAR */
+  .filter-bar{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+  .filter-btn{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;color:var(--text2);cursor:pointer;transition:all 0.15s}
+  .filter-btn:hover,.filter-btn.active{background:var(--violet-dim);border-color:rgba(124,58,237,0.3);color:var(--violet-light)}
+
+  /* RULE CHIPS */
+  .rule-chip{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:11px;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+  .rule-if{color:var(--cyan);font-weight:600}
+  .rule-then{color:var(--violet-light);font-weight:600}
+
+  /* VIRAL METER */
+  .viral-meter{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px}
+  .viral-score-big{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:500;background:linear-gradient(135deg,var(--violet),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .viral-label{font-size:12px;color:var(--text2);margin-top:2px}
+
+  /* TOOLTIP LIVE */
+  .live-indicator{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text3)}
+  .live-dot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:pulse 2s infinite}
+
+  @media(max-width:900px){
+    .sidebar{width:56px;min-width:56px}
+    .nav-item span,.logo-tag,.plan-badge{display:none}
+    .logo-text{font-size:18px}
+    .sidebar-footer{padding:10px}
+    .grid-4{grid-template-columns:repeat(2,1fr)}
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-text"><span class="logo-h">H</span><span class="logo-o">O</span><span class="logo-k">K</span></div>
+    <div class="logo-tag">Creator Growth OS</div>
+  </div>
+  <div class="nav">
+    <div class="nav-item active" onclick="showScreen('dashboard',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2"/></svg>
+      <span>Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="showScreen('trends',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17" stroke-width="2" stroke-linecap="round"/><polyline points="16,7 22,7 22,13" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Trend Feed</span>
+    </div>
+    <div class="nav-item" onclick="showScreen('studio',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 20h9" stroke-width="2" stroke-linecap="round"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z" stroke-width="2"/></svg>
+      <span>Content Studio</span>
+    </div>
+    <div class="nav-item" onclick="showScreen('campaigns',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Campaigns</span>
+    </div>
+    <div class="nav-item" onclick="showScreen('analytics',this)">
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke-width="2" stroke-linecap="round"/></svg>
+      <span>Analytics</span>
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="plan-badge">
+      <div class="plan-name">⚡ Creator Plan</div>
+      <div class="plan-credits">73 AI sessions left</div>
+      <button class="upgrade-btn" onclick="showScreen('dashboard',document.querySelector('.nav-item'))">Upgrade to Pro →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-greeting">Good morning, Sarah 👋 <span>— here's what's trending in your niche</span></div>
+    <div class="topbar-right">
+      <div class="credits-pill"><span class="credits-dot"></span>73 AI sessions</div>
+      <button class="upgrade-pill">Upgrade to Pro</button>
+      <div class="avatar">SJ</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="screen-dashboard" class="screen active">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Your creator growth at a glance</div>
+
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-title">Followers Gained</div>
+          <div class="stat-value" id="cnt-followers">847</div>
+          <div class="stat-label">this week</div>
+          <div class="stat-delta up">↑ 12% vs last week</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Posts Published</div>
+          <div class="stat-value" id="cnt-posts">23</div>
+          <div class="stat-label">this month</div>
+          <div class="stat-delta up">↑ 4 more than last month</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Avg Engagement</div>
+          <div class="stat-value">4.2<span style="font-size:14px;color:var(--text2)">%</span></div>
+          <div class="stat-label">across all platforms</div>
+          <div class="stat-delta up">↑ 0.8% this month</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Est. Reach</div>
+          <div class="stat-value">128<span style="font-size:14px;color:var(--text2)">K</span></div>
+          <div class="stat-label">this month</div>
+          <div class="stat-delta up">↑ 23% vs last month</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:16px">
+        <div>
+          <div class="section-header">
+            <div class="section-title">Active Campaigns</div>
+            <button class="btn btn-violet" onclick="showScreen('campaigns',document.querySelectorAll('.nav-item')[3])">+ New Campaign</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div class="campaign-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="campaign-name">Fitness Authority</div>
+                  <div class="platform-row">
+                    <div class="platform-icon platform-x">𝕏</div>
+                    <div class="platform-icon platform-ig">▣</div>
+                    <span class="badge badge-green" style="margin-left:4px">Active</span>
+                  </div>
+                </div>
+                <span class="badge badge-violet">Email Capture</span>
+              </div>
+              <div class="campaign-stats">
+                <div><div class="c-stat-val">12</div><div class="c-stat-lbl">Posts queued</div></div>
+                <div><div class="c-stat-val">+521</div><div class="c-stat-lbl">Followers</div></div>
+                <div><div class="c-stat-val">4.8%</div><div class="c-stat-lbl">Eng. rate</div></div>
+              </div>
+              <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:78%;background:linear-gradient(90deg,var(--violet),var(--cyan))"></div></div>
+            </div>
+            <div class="campaign-card">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div class="campaign-name">Course Launch Q1</div>
+                  <div class="platform-row">
+                    <div class="platform-icon platform-li">in</div>
+                    <div class="platform-icon platform-tt">♪</div>
+                    <span class="badge badge-green" style="margin-left:4px">Active</span>
+                  </div>
+                </div>
+                <span class="badge badge-yellow">Direct Sale</span>
+              </div>
+              <div class="campaign-stats">
+                <div><div class="c-stat-val">5</div><div class="c-stat-lbl">Posts queued</div></div>
+                <div><div class="c-stat-val">+189</div><div class="c-stat-lbl">Followers</div></div>
+                <div><div class="c-stat-val">3.1%</div><div class="c-stat-lbl">Eng. rate</div></div>
+              </div>
+              <div class="progress-bar" style="margin-top:10px"><div class="progress-fill" style="width:42%;background:linear-gradient(90deg,var(--gold),var(--red))"></div></div>
+            </div>
+          </div>
+
+          <div class="section-header">
+            <div class="section-title">Upcoming Posts</div>
+            <button class="btn btn-ghost">View all</button>
+          </div>
+          <div class="card" style="padding:0">
+            <table>
+              <tr>
+                <th>Post</th><th>Platform</th><th>Campaign</th><th>Time</th><th>Viral Score</th>
+              </tr>
+              <tr>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"The fitness industry lied to you about morning routines..."</td>
+                <td><div class="platform-icon platform-x">𝕏</div></td>
+                <td><span class="badge badge-violet">Fitness</span></td>
+                <td style="color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:12px">Today 7:00am</td>
+                <td><span style="color:#34D399;font-family:'JetBrains Mono',monospace;font-weight:600">82</span></td>
+              </tr>
+              <tr>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"7 signs your morning routine is working against you..."</td>
+                <td><div class="platform-icon platform-ig">▣</div></td>
+                <td><span class="badge badge-violet">Fitness</span></td>
+                <td style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:12px">Today 6:30pm</td>
+                <td><span style="color:#34D399;font-family:'JetBrains Mono',monospace;font-weight:600">76</span></td>
+              </tr>
+              <tr>
+                <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"I invested £10K in my fitness knowledge. Here's the ROI..."</td>
+                <td><div class="platform-icon platform-li">in</div></td>
+                <td><span class="badge badge-yellow">Course</span></td>
+                <td style="color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:12px">Tomorrow 8:00am</td>
+                <td><span style="color:var(--gold);font-family:'JetBrains Mono',monospace;font-weight:600">68</span></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT SIDEBAR — TRENDING -->
+        <div>
+          <div class="section-header">
+            <div class="section-title">Trending in your niche</div>
+            <div class="live-indicator"><span class="live-dot"></span>Live</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="trend-card featured">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="badge badge-red"><span class="pulse-dot dot-red" style="margin-right:2px"></span>Breaking</span>
+                <span class="opp-score" style="color:var(--red)">94<span class="opp-label">/100</span></span>
+              </div>
+              <div class="trend-keyword">Morning routine optimization</div>
+              <div class="trend-category">Fitness · Productivity</div>
+              <div class="platform-row" style="margin:6px 0">
+                <div class="platform-icon platform-x">𝕏</div>
+                <div class="platform-icon platform-tt">♪</div>
+              </div>
+              <div class="trend-window">⏱ ~4 hours left in window</div>
+              <button class="btn btn-violet" style="width:100%;margin-top:10px;font-size:11px" onclick="showScreen('studio',document.querySelectorAll('.nav-item')[2])">Create Post →</button>
+            </div>
+            <div class="trend-card">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="badge badge-yellow"><span class="pulse-dot dot-yellow" style="margin-right:2px"></span>Rising</span>
+                <span class="opp-score" style="color:var(--gold)">78<span class="opp-label">/100</span></span>
+              </div>
+              <div class="trend-keyword">Cold exposure benefits</div>
+              <div class="trend-category">Fitness · Health</div>
+              <div class="trend-window">⏱ ~18 hours in window</div>
+            </div>
+            <div class="trend-card">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <span class="badge badge-green">Established</span>
+                <span class="opp-score" style="color:#34D399">61<span class="opp-label">/100</span></span>
+              </div>
+              <div class="trend-keyword">Protein timing myths</div>
+              <div class="trend-category">Fitness · Nutrition</div>
+              <div class="trend-window">⏱ Still high-volume</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TREND FEED -->
+    <div id="screen-trends" class="screen">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="page-title">Trend Intelligence</div>
+        <div class="live-indicator"><span class="live-dot"></span>Updated 3 minutes ago</div>
+      </div>
+      <div class="page-sub">Real-time opportunities ranked by Opportunity Score for your niche</div>
+      <div class="filter-bar">
+        <button class="filter-btn active">All Platforms</button>
+        <button class="filter-btn">𝕏 X</button>
+        <button class="filter-btn">♪ TikTok</button>
+        <button class="filter-btn">▣ Instagram</button>
+        <button class="filter-btn">in LinkedIn</button>
+        <button class="filter-btn" style="margin-left:8px;border-left:1px solid var(--border2)">🔴 Breaking</button>
+        <button class="filter-btn">🟡 Rising</button>
+        <button class="filter-btn">🟢 Established</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+
+        <div class="trend-card featured">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-red"><span class="pulse-dot dot-red" style="margin-right:2px"></span>Breaking</span>
+            <div>
+              <span class="opp-score" style="color:var(--red)">94</span>
+              <span class="opp-label">/100</span>
+            </div>
+          </div>
+          <div class="trend-keyword">Morning routine optimization</div>
+          <div class="trend-category">Fitness · Productivity · Lifestyle</div>
+          <div class="platform-row" style="margin:8px 0">
+            <div class="platform-icon platform-x">𝕏</div>
+            <div class="platform-icon platform-tt">♪</div>
+            <div class="platform-icon platform-ig">▣</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:94%;background:linear-gradient(90deg,var(--red),var(--gold))"></div></div>
+          <svg class="sparkline" viewBox="0 0 80 24" style="margin:8px 0;width:100%;height:24px">
+            <polyline points="0,20 12,18 24,15 36,10 48,6 60,4 72,2 80,1" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="trend-window">⏱ ~4 hours left — act now</div>
+          <button class="btn btn-violet" style="width:100%;margin-top:10px;font-size:11px" onclick="showScreen('studio',document.querySelectorAll('.nav-item')[2])">Create Post →</button>
+        </div>
+
+        <div class="trend-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-yellow"><span class="pulse-dot dot-yellow" style="margin-right:2px"></span>Rising</span>
+            <div><span class="opp-score" style="color:var(--gold)">78</span><span class="opp-label">/100</span></div>
+          </div>
+          <div class="trend-keyword">Cold exposure benefits</div>
+          <div class="trend-category">Fitness · Health · Biohacking</div>
+          <div class="platform-row" style="margin:8px 0">
+            <div class="platform-icon platform-x">𝕏</div>
+            <div class="platform-icon platform-ig">▣</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:78%;background:linear-gradient(90deg,var(--gold),var(--violet))"></div></div>
+          <svg class="sparkline" viewBox="0 0 80 24" style="margin:8px 0;width:100%;height:24px">
+            <polyline points="0,22 16,20 32,17 48,13 64,9 80,6" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="trend-window">⏱ ~18 hours — strong window</div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:11px">Create Post</button>
+        </div>
+
+        <div class="trend-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-yellow"><span class="pulse-dot dot-yellow" style="margin-right:2px"></span>Rising</span>
+            <div><span class="opp-score" style="color:var(--gold)">71</span><span class="opp-label">/100</span></div>
+          </div>
+          <div class="trend-keyword">AI productivity stack</div>
+          <div class="trend-category">Productivity · Tech · Business</div>
+          <div class="platform-row" style="margin:8px 0">
+            <div class="platform-icon platform-li">in</div>
+            <div class="platform-icon platform-x">𝕏</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,var(--violet),var(--cyan))"></div></div>
+          <svg class="sparkline" viewBox="0 0 80 24" style="margin:8px 0;width:100%;height:24px">
+            <polyline points="0,23 20,21 40,18 56,14 70,10 80,8" fill="none" stroke="var(--violet)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="trend-window">⏱ ~22 hours — growing</div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:11px">Create Post</button>
+        </div>
+
+        <div class="trend-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-green">Established</span>
+            <div><span class="opp-score" style="color:#34D399">61</span><span class="opp-label">/100</span></div>
+          </div>
+          <div class="trend-keyword">Protein timing myths</div>
+          <div class="trend-category">Fitness · Nutrition · Science</div>
+          <div class="platform-row" style="margin:8px 0">
+            <div class="platform-icon platform-x">𝕏</div>
+            <div class="platform-icon platform-ig">▣</div>
+            <div class="platform-icon platform-tt">♪</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:61%;background:#34D399"></div></div>
+          <svg class="sparkline" viewBox="0 0 80 24" style="margin:8px 0;width:100%;height:24px">
+            <polyline points="0,8 16,6 32,5 48,5 64,6 80,7" fill="none" stroke="#34D399" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="trend-window">⏱ Still high-volume — safe to join</div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:11px">Create Post</button>
+        </div>
+
+        <div class="trend-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-green">Established</span>
+            <div><span class="opp-score" style="color:#34D399">54</span><span class="opp-label">/100</span></div>
+          </div>
+          <div class="trend-keyword">Passive income myths debunked</div>
+          <div class="trend-category">Finance · Creator Economy</div>
+          <div class="platform-row" style="margin:8px 0">
+            <div class="platform-icon platform-li">in</div>
+            <div class="platform-icon platform-tt">♪</div>
+          </div>
+          <div class="progress-bar"><div class="progress-fill" style="width:54%;background:#34D399"></div></div>
+          <div class="trend-window">⏱ Peaked — still usable</div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:10px;font-size:11px">Create Post</button>
+        </div>
+
+        <div class="trend-card" style="opacity:0.6">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+            <span class="badge badge-gray">Saturated</span>
+            <div><span class="opp-score" style="color:var(--text3)">22</span><span class="opp-label">/100</span></div>
+          </div>
+          <div class="trend-keyword">New year new me</div>
+          <div class="trend-category">Lifestyle · Generic</div>
+          <div class="trend-window" style="margin-top:40px">⛔ Too crowded — skip this one</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT STUDIO -->
+    <div id="screen-studio" class="screen">
+      <div class="page-title">Content Studio</div>
+      <div class="page-sub">Generate hooks that stop thumbs</div>
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:16px">
+
+        <!-- LEFT PANEL -->
+        <div>
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-title">Trending Topic</div>
+            <div style="background:var(--surface2);border:1px solid rgba(244,63,94,0.3);border-radius:7px;padding:10px">
+              <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+                <span class="badge badge-red" style="font-size:10px"><span class="pulse-dot dot-red" style="margin-right:2px"></span>Breaking</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red)">94/100</span>
+              </div>
+              <div style="font-weight:700;font-size:13px">Morning routine optimization</div>
+              <div style="font-size:11px;color:var(--text3)">⏱ ~4 hours left</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-title">Platform</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <button class="filter-btn active" style="border-radius:7px;padding:8px">𝕏 X</button>
+              <button class="filter-btn" style="border-radius:7px;padding:8px">♪ TikTok</button>
+              <button class="filter-btn" style="border-radius:7px;padding:8px">▣ Instagram</button>
+              <button class="filter-btn" style="border-radius:7px;padding:8px">in LinkedIn</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-title">Hook Framework</div>
+            <div style="display:flex;flex-direction:column;gap:5px">
+              <button class="filter-btn" style="text-align:left;border-radius:6px">🎯 Curiosity Gap</button>
+              <button class="filter-btn active" style="text-align:left;border-radius:6px">⚡ Contrarian</button>
+              <button class="filter-btn" style="text-align:left;border-radius:6px">📋 Number / List</button>
+              <button class="filter-btn" style="text-align:left;border-radius:6px">💔 Personal Stakes</button>
+              <button class="filter-btn" style="text-align:left;border-radius:6px">🔥 Bold Claim</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom:12px">
+            <div class="card-title">Campaign</div>
+            <div style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:13px">Fitness Authority</div>
+          </div>
+
+          <div class="viral-meter">
+            <div class="viral-score-big">82</div>
+            <div class="viral-label">Predicted Viral Score</div>
+            <div class="progress-bar" style="margin-top:8px"><div class="progress-fill" style="width:82%;background:linear-gradient(90deg,var(--violet),var(--cyan))"></div></div>
+            <div style="font-size:10px;color:var(--text3);margin-top:6px">High potential — strong hook + breaking trend</div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div>
+          <div class="section-header">
+            <div class="section-title">5 Hook Variants — Contrarian Framework</div>
+            <button class="btn btn-violet">↻ Regenerate (1 session)</button>
+          </div>
+
+          <div class="hook-card selected">
+            <div class="hook-text">"The fitness industry lied to you about morning routines. Here's what 2 years of data actually shows."</div>
+            <div class="hook-meta">
+              <span class="badge badge-green">Eng. +5.2%</span>
+              <span class="badge badge-cyan">142 chars</span>
+              <span class="badge badge-violet">Thread format</span>
+              <span style="margin-left:auto;color:var(--violet-light);font-size:12px;font-weight:600">✓ Selected</span>
+            </div>
+          </div>
+
+          <div class="hook-card">
+            <div class="hook-text">"Waking up at 5am is not the secret. I did it for 6 months. Here's what nobody tells you about what actually happened."</div>
+            <div class="hook-meta">
+              <span class="badge badge-green">Eng. +4.8%</span>
+              <span class="badge badge-cyan">155 chars</span>
+              <span class="badge badge-violet">Thread format</span>
+            </div>
+          </div>
+
+          <div class="hook-card">
+            <div class="hook-text">"Morning routines are overrated. The top 1% of performers don't have a 5am routine — they have this instead."</div>
+            <div class="hook-meta">
+              <span class="badge badge-yellow">Eng. +4.1%</span>
+              <span class="badge badge-cyan">131 chars</span>
+              <span class="badge badge-gray">Single post</span>
+            </div>
+          </div>
+
+          <div class="hook-card">
+            <div class="hook-text">"Unpopular opinion: your morning routine is making you less productive. Here's the evidence."</div>
+            <div class="hook-meta">
+              <span class="badge badge-yellow">Eng. +3.9%</span>
+              <span class="badge badge-cyan">92 chars</span>
+              <span class="badge badge-gray">Single post</span>
+            </div>
+          </div>
+
+          <div class="hook-card">
+            <div class="hook-text">"Stop optimising your morning. Start optimising your decision fatigue. The science changed my entire approach."</div>
+            <div class="hook-meta">
+              <span class="badge badge-yellow">Eng. +3.7%</span>
+              <span class="badge badge-cyan">110 chars</span>
+              <span class="badge badge-gray">Single post</span>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="section-title" style="margin-bottom:12px">Post Preview — X Thread</div>
+          <div class="post-preview">
+            <strong>1/</strong> The fitness industry lied to you about morning routines. Here's what 2 years of data actually shows. 🧵<br><br>
+            <strong>2/</strong> The "5am club" promises productivity, weight loss, and mental clarity. I tested it obsessively. The results were... not what the gurus promised.<br><br>
+            <strong>3/</strong> What actually matters isn't <em>when</em> you wake up. It's your first 90 minutes of cognitive work — whenever that happens for your chronotype.<br><br>
+            <strong>4/</strong> The data: creators who schedule deep work in their peak biological window outperform "5am risers" by 40% on output quality. Source below 👇<br><br>
+            <strong>5/</strong> The fitness industry sells routines because routines are sellable. Biology sells nothing. But biology wins.<br><br>
+            <span class="cta-line">→ I cover what actually works in my free email: link in bio. 8,000 creators already optimising smarter.</span><br><br>
+            <span class="hashtag">#Fitness #MorningRoutine #ProductivityHacks #CreatorEconomy</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-violet">Add to Queue →</button>
+            <button class="btn btn-ghost">Schedule Now</button>
+            <button class="btn btn-ghost">Edit Post</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAMPAIGNS -->
+    <div id="screen-campaigns" class="screen">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="page-title">Campaigns</div>
+        <button class="btn btn-violet">+ New Campaign</button>
+      </div>
+      <div class="page-sub">Unlimited campaigns — each with its own niche, funnel, and automation</div>
+
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="campaign-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <span class="badge badge-green">Active</span>
+            <span class="badge badge-violet">Email Capture</span>
+          </div>
+          <div class="campaign-name">Fitness Authority</div>
+          <div class="platform-row" style="margin-bottom:10px">
+            <div class="platform-icon platform-x">𝕏</div>
+            <div class="platform-icon platform-ig">▣</div>
+          </div>
+          <div class="campaign-stats">
+            <div><div class="c-stat-val">+521</div><div class="c-stat-lbl">Followers</div></div>
+            <div><div class="c-stat-val">23</div><div class="c-stat-lbl">Posts</div></div>
+            <div><div class="c-stat-val">4.8%</div><div class="c-stat-lbl">Eng.</div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <button class="btn btn-violet" style="flex:1;font-size:11px">View</button>
+            <button class="btn btn-ghost" style="font-size:11px">···</button>
+          </div>
+        </div>
+        <div class="campaign-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <span class="badge badge-green">Active</span>
+            <span class="badge badge-yellow">Direct Sale</span>
+          </div>
+          <div class="campaign-name">Course Launch Q1</div>
+          <div class="platform-row" style="margin-bottom:10px">
+            <div class="platform-icon platform-li">in</div>
+            <div class="platform-icon platform-tt">♪</div>
+          </div>
+          <div class="campaign-stats">
+            <div><div class="c-stat-val">+189</div><div class="c-stat-lbl">Followers</div></div>
+            <div><div class="c-stat-val">8</div><div class="c-stat-lbl">Posts</div></div>
+            <div><div class="c-stat-val">3.1%</div><div class="c-stat-lbl">Eng.</div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <button class="btn btn-violet" style="flex:1;font-size:11px">View</button>
+            <button class="btn btn-ghost" style="font-size:11px">···</button>
+          </div>
+        </div>
+        <div class="campaign-card" style="opacity:0.7">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <span class="badge badge-gray">Paused</span>
+            <span class="badge badge-cyan">Affiliate</span>
+          </div>
+          <div class="campaign-name">Personal Brand</div>
+          <div class="platform-row" style="margin-bottom:10px">
+            <div class="platform-icon platform-x">𝕏</div>
+            <div class="platform-icon platform-ig">▣</div>
+            <div class="platform-icon platform-li">in</div>
+            <div class="platform-icon platform-tt">♪</div>
+          </div>
+          <div class="campaign-stats">
+            <div><div class="c-stat-val">+1.2K</div><div class="c-stat-lbl">Followers</div></div>
+            <div><div class="c-stat-val">47</div><div class="c-stat-lbl">Posts</div></div>
+            <div><div class="c-stat-val">3.8%</div><div class="c-stat-lbl">Eng.</div></div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:10px">
+            <button class="btn btn-ghost" style="flex:1;font-size:11px">Resume</button>
+            <button class="btn btn-ghost" style="font-size:11px">···</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Post Queue — Fitness Authority</div>
+        <button class="btn btn-violet" onclick="showScreen('studio',document.querySelectorAll('.nav-item')[2])">+ Generate Post</button>
+      </div>
+      <div class="card" style="padding:0;margin-bottom:16px">
+        <table>
+          <tr><th>Post</th><th>Platform</th><th>Status</th><th>Scheduled</th><th>Viral Score</th><th>Actions</th></tr>
+          <tr>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"The fitness industry lied to you about morning routines..."</td>
+            <td><div class="platform-icon platform-x">𝕏</div></td>
+            <td><span class="badge badge-green">Approved</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--cyan)">Today 7:00am</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#34D399">82</span></td>
+            <td><button class="btn btn-ghost" style="font-size:11px;padding:4px 8px">Edit</button></td>
+          </tr>
+          <tr>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"7 signs your morning routine is working against you..."</td>
+            <td><div class="platform-icon platform-ig">▣</div></td>
+            <td><span class="badge badge-green">Approved</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">Today 6:30pm</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:#34D399">76</span></td>
+            <td><button class="btn btn-ghost" style="font-size:11px;padding:4px 8px">Edit</button></td>
+          </tr>
+          <tr>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"Cold showers changed my training. The data is wild."</td>
+            <td><div class="platform-icon platform-x">𝕏</div></td>
+            <td><span class="badge badge-yellow">Draft</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3)">Pending approval</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--gold)">71</span></td>
+            <td style="display:flex;gap:4px"><button class="btn btn-violet" style="font-size:11px;padding:4px 8px">Approve</button><button class="btn btn-ghost" style="font-size:11px;padding:4px 8px">Edit</button></td>
+          </tr>
+          <tr>
+            <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"Protein timing: what the research actually says..."</td>
+            <td><div class="platform-icon platform-ig">▣</div></td>
+            <td><span class="badge badge-cyan">Scheduled</span></td>
+            <td style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)">Thu 7:00am</td>
+            <td><span style="font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--gold)">68</span></td>
+            <td><button class="btn btn-ghost" style="font-size:11px;padding:4px 8px">Edit</button></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="section-title" style="margin-bottom:10px">Automation Rules</div>
+      <div class="rule-chip"><span class="rule-if">IF</span> queue drops below 3 posts <span class="rule-then">THEN</span> generate 5 new hooks for review <span class="badge badge-green" style="margin-left:auto">Active</span></div>
+      <div class="rule-chip"><span class="rule-if">IF</span> trend score > 85 in fitness niche <span class="rule-then">THEN</span> flag for immediate review <span class="badge badge-green" style="margin-left:auto">Active</span></div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div id="screen-analytics" class="screen">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <div class="page-title">Analytics</div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 12px;font-size:12px;color:var(--text2)">Last 30 days ▾</div>
+      </div>
+      <div class="page-sub">See what works. Post more of it.</div>
+
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="card">
+          <div class="card-title">Total Impressions</div>
+          <div class="stat-value">847<span style="font-size:14px;color:var(--text2)">K</span></div>
+          <div class="stat-delta up">↑ 23% vs prior period</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Followers Gained</div>
+          <div class="stat-value">+1,204</div>
+          <div class="stat-delta up">↑ 18% vs prior period</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Engagement Rate</div>
+          <div class="stat-value">4.2<span style="font-size:14px;color:var(--text2)">%</span></div>
+          <div class="stat-delta up">↑ +0.8pp vs prior period</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Funnel Clicks</div>
+          <div class="stat-value">3,847</div>
+          <div class="stat-delta up">↑ 31% vs prior period</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px">
+        <div class="card">
+          <div class="section-header"><div class="section-title">Follower Growth — Last 30 Days</div></div>
+          <svg viewBox="0 0 600 160" style="width:100%;height:160px">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,140 L20,136 L40,130 L60,125 L80,118 L100,115 L120,108 L140,100 L160,96 L180,90 L200,85 L220,80 L240,75 L260,68 L280,62 L300,55 L320,50 L340,44 L360,40 L380,34 L400,30 L420,26 L440,22 L460,18 L480,15 L500,12 L520,10 L540,8 L560,6 L580,4 L600,3 L600,160 L0,160 Z" fill="url(#chartGrad)"/>
+            <path d="M0,140 L20,136 L40,130 L60,125 L80,118 L100,115 L120,108 L140,100 L160,96 L180,90 L200,85 L220,80 L240,75 L260,68 L280,62 L300,55 L320,50 L340,44 L360,40 L380,34 L400,30 L420,26 L440,22 L460,18 L480,15 L500,12 L520,10 L540,8 L560,6 L580,4 L600,3" fill="none" stroke="var(--violet)" stroke-width="2.5" stroke-linecap="round"/>
+            <circle cx="600" cy="3" r="4" fill="var(--violet)"/>
+            <text x="0" y="155" font-size="10" fill="var(--text3)">Mar 1</text>
+            <text x="280" y="155" font-size="10" fill="var(--text3)">Mar 15</text>
+            <text x="570" y="155" font-size="10" fill="var(--text3)">Mar 27</text>
+            <text x="0" y="138" font-size="10" fill="var(--text3)" font-family="'JetBrains Mono',monospace">0</text>
+            <text x="0" y="50" font-size="10" fill="var(--text3)" font-family="'JetBrains Mono',monospace">+1K</text>
+          </svg>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:12px">Hook Framework Performance</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Contrarian</span><span style="font-family:'JetBrains Mono',monospace;color:#34D399">5.8%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:95%;background:linear-gradient(90deg,var(--violet),var(--cyan))"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Curiosity Gap</span><span style="font-family:'JetBrains Mono',monospace;color:#34D399">4.9%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:80%;background:var(--violet)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Personal Stakes</span><span style="font-family:'JetBrains Mono',monospace;color:var(--gold)">4.2%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--gold)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Number / List</span><span style="font-family:'JetBrains Mono',monospace;color:var(--gold)">3.8%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:62%;background:var(--gold)"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px"><span>Bold Claim</span><span style="font-family:'JetBrains Mono',monospace;color:var(--text2)">3.1%</span></div>
+              <div class="progress-bar"><div class="progress-fill" style="width:50%;background:var(--text3)"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:10px;color:var(--text3)">💡 HOOK is weighting Contrarian hooks higher in future generations</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:12px">Top Performing Posts</div>
+          <table>
+            <tr><th>Hook</th><th>Platform</th><th>Eng.</th><th>Reach</th></tr>
+            <tr>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"The fitness industry lied..."</td>
+              <td><div class="platform-icon platform-x">𝕏</div></td>
+              <td style="color:#34D399;font-family:'JetBrains Mono',monospace">7.2%</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--text2)">24K</td>
+            </tr>
+            <tr>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"Posting every day is killing..."</td>
+              <td><div class="platform-icon platform-ig">▣</div></td>
+              <td style="color:#34D399;font-family:'JetBrains Mono',monospace">6.8%</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--text2)">18K</td>
+            </tr>
+            <tr>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"7 signs your strategy is dead..."</td>
+              <td><div class="platform-icon platform-tt">♪</div></td>
+              <td style="color:#34D399;font-family:'JetBrains Mono',monospace">6.1%</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--text2)">31K</td>
+            </tr>
+            <tr>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"Nobody talks about this reason..."</td>
+              <td><div class="platform-icon platform-li">in</div></td>
+              <td style="color:var(--gold);font-family:'JetBrains Mono',monospace">5.4%</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--text2)">12K</td>
+            </tr>
+            <tr>
+              <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">"I tested 5am for 6 months..."</td>
+              <td><div class="platform-icon platform-x">𝕏</div></td>
+              <td style="color:var(--gold);font-family:'JetBrains Mono',monospace">4.9%</td>
+              <td style="font-family:'JetBrains Mono',monospace;color:var(--text2)">9K</td>
+            </tr>
+          </table>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:6px">Best Times to Post — Your Data</div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:10px">Based on your last 30 days of engagement data</div>
+          <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:2px;margin-bottom:4px">
+            <div style="font-size:9px;color:var(--text3)"></div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">6a</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">8a</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">10a</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">12p</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">2p</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">5p</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">7p</div>
+            <div style="font-size:9px;color:var(--text3);text-align:center">9p</div>
+          </div>
+          <div id="heatmap-grid"></div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10px;color:var(--text3)">
+            <div style="display:flex;gap:3px">
+              <div style="width:10px;height:10px;border-radius:2px;background:rgba(255,255,255,0.04)"></div>
+              <div style="width:10px;height:10px;border-radius:2px;background:rgba(124,58,237,0.2)"></div>
+              <div style="width:10px;height:10px;border-radius:2px;background:rgba(124,58,237,0.5)"></div>
+              <div style="width:10px;height:10px;border-radius:2px;background:var(--violet)"></div>
+            </div>
+            Low → High engagement
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showScreen(id, navEl) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    if (navEl) navEl.classList.add('active');
+  }
+
+  // Animate counters
+  function animateCount(el, target, suffix) {
+    let current = 0;
+    const step = Math.ceil(target / 40);
+    const timer = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current.toLocaleString() + (suffix || '');
+      if (current >= target) clearInterval(timer);
+    }, 30);
+  }
+
+  // Progress bars animation
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.querySelectorAll('.progress-fill').forEach(el => {
+        const w = el.style.width;
+        el.style.width = '0';
+        setTimeout(() => { el.style.width = w; }, 100);
+      });
+    }, 200);
+  });
+
+  // Generate heatmap
+  const heatData = [
+    [0,2,1,0,0,1,3,4,2],
+    [0,3,2,1,0,1,4,4,2],
+    [0,2,1,0,0,0,2,3,1],
+    [0,4,2,1,0,1,3,4,2],
+    [0,3,3,1,0,1,4,3,1],
+    [0,1,1,0,0,0,2,2,1],
+    [0,1,0,0,0,0,1,2,1]
+  ];
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const heatGrid = document.getElementById('heatmap-grid');
+  heatData.forEach((row, i) => {
+    const rowEl = document.createElement('div');
+    rowEl.style.cssText = 'display:grid;grid-template-columns:repeat(9,1fr);gap:2px;margin-bottom:2px';
+    const dayEl = document.createElement('div');
+    dayEl.style.cssText = 'font-size:9px;color:var(--text3);display:flex;align-items:center';
+    dayEl.textContent = days[i];
+    rowEl.appendChild(dayEl);
+    row.slice(1).forEach(heat => {
+      const cell = document.createElement('div');
+      cell.style.cssText = 'height:18px;border-radius:3px';
+      const classes = ['','rgba(124,58,237,0.2)','rgba(124,58,237,0.4)','rgba(124,58,237,0.65)','var(--violet)'];
+      cell.style.background = classes[heat] || 'rgba(255,255,255,0.04)';
+      rowEl.appendChild(cell);
+    });
+    heatGrid.appendChild(rowEl);
+  });
+
+  // Filter buttons toggle
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const siblings = this.parentElement.querySelectorAll('.filter-btn');
+      siblings.forEach(s => s.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  // Hook card selection
+  document.querySelectorAll('.hook-card').forEach(card => {
+    card.addEventListener('click', function() {
+      document.querySelectorAll('.hook-card').forEach(c => c.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>

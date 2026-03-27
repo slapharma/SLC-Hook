@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOOK — Business Pack 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#080810;--s1:#0F0F1A;--s2:#161625;
+  --v:#7C3AED;--vl:#9D5CF5;--vd:rgba(124,58,237,0.12);
+  --c:#06B6D4;--cd:rgba(6,182,212,0.12);
+  --r:#F43F5E;--g:#F59E0B;
+  --t:#F8FAFC;--t2:#94A3B8;--t3:#64748B;
+  --b:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--t);font-family:'Inter',sans-serif;line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(8,8,16,0.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--b);padding:0 48px}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--t2);text-decoration:none;font-size:13px;font-weight:500;transition:color 0.15s}
+.nav-links a:hover{color:var(--t)}
+.nav-cta{background:var(--v);color:#fff;border:none;border-radius:7px;padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;text-decoration:none;transition:background 0.15s}
+.nav-cta:hover{background:var(--vl)}
+
+/* SECTIONS */
+section{padding:96px 48px}
+.container{max-width:1100px;margin:0 auto}
+.fade-in{opacity:0;transform:translateY(20px);transition:opacity 0.6s ease,transform 0.6s ease}
+.fade-in.visible{opacity:1;transform:none}
+
+/* HERO */
+#hero{padding:160px 48px 120px;text-align:center;position:relative;overflow:hidden}
+.hero-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(124,58,237,0.18) 0%,transparent 70%);pointer-events:none}
+.hero-logo{font-family:'Syne',sans-serif;font-size:clamp(80px,14vw,160px);font-weight:800;line-height:0.9;background:linear-gradient(135deg,var(--v) 0%,#A855F7 40%,var(--c) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:24px;position:relative}
+.hero-tagline{font-family:'Syne',sans-serif;font-size:clamp(20px,3vw,32px);font-weight:700;margin-bottom:16px;letter-spacing:-0.5px}
+.hero-sub{font-size:16px;color:var(--t2);max-width:540px;margin:0 auto 40px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{background:var(--v);color:#fff;border:none;border-radius:8px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;display:inline-block}
+.btn-primary:hover{background:var(--vl);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--t);border:1px solid var(--b2);border-radius:8px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;text-decoration:none;transition:all 0.15s;display:inline-block}
+.btn-ghost:hover{background:var(--s2);border-color:var(--t2)}
+.platform-strip{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:56px;padding-top:40px;border-top:1px solid var(--b)}
+.platform-strip span{font-size:12px;color:var(--t3);letter-spacing:1px;text-transform:uppercase}
+.p-badge{background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 12px;font-size:12px;font-weight:600;color:var(--t2)}
+
+/* SECTION HEADERS */
+.section-eyebrow{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--v);margin-bottom:12px}
+.section-headline{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,44px);font-weight:800;line-height:1.1;margin-bottom:16px;letter-spacing:-0.5px}
+.section-sub{font-size:16px;color:var(--t2);max-width:560px;line-height:1.7}
+
+/* PROBLEM */
+#problem{background:var(--bg)}
+.problem-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:48px}
+.problem-card{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:24px;transition:border-color 0.2s}
+.problem-card:hover{border-color:var(--b2)}
+.problem-icon{width:44px;height:44px;background:var(--vd);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:16px}
+.problem-title{font-size:16px;font-weight:700;margin-bottom:8px}
+.problem-stat{font-size:13px;color:var(--t2)}
+.problem-stat strong{color:var(--r);font-family:'JetBrains Mono',monospace}
+
+/* SOLUTION */
+#solution{background:var(--s1)}
+.solution-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:48px}
+.solution-card{background:var(--s2);border:1px solid var(--b);border-radius:12px;padding:24px;transition:all 0.2s}
+.solution-card:hover{border-color:rgba(124,58,237,0.3);transform:translateY(-2px)}
+.sol-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--v);font-weight:500;margin-bottom:10px}
+.sol-title{font-size:17px;font-weight:700;margin-bottom:8px}
+.sol-desc{font-size:13px;color:var(--t2);line-height:1.6}
+.platform-icons{display:flex;gap:8px;align-items:center;margin-top:40px;justify-content:center}
+.p-icon{background:var(--s2);border:1px solid var(--b2);border-radius:8px;padding:8px 16px;font-size:13px;font-weight:600;color:var(--t2)}
+
+/* WORKFLOW */
+#workflow{background:var(--bg)}
+.steps{display:flex;align-items:center;justify-content:center;gap:0;margin-top:48px;flex-wrap:wrap}
+.step{text-align:center;flex:1;min-width:140px;padding:0 8px;position:relative}
+.step-num{width:48px;height:48px;background:linear-gradient(135deg,var(--v),var(--c));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin:0 auto 12px;color:#fff}
+.step-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.step-desc{font-size:11px;color:var(--t3)}
+.step-arrow{font-size:20px;color:var(--v);padding:0 4px;align-self:flex-start;margin-top:12px}
+.compound-note{text-align:center;margin-top:48px;font-size:14px;color:var(--t2);border-top:1px solid var(--b);padding-top:32px}
+.compound-note strong{color:var(--vl)}
+
+/* PRICING */
+#pricing{background:var(--s1)}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px;align-items:start}
+.pricing-card{background:var(--s2);border:1px solid var(--b);border-radius:14px;padding:28px;transition:all 0.2s}
+.pricing-card.featured{border-color:rgba(124,58,237,0.5);box-shadow:0 0 40px rgba(124,58,237,0.12);transform:scale(1.02)}
+.pricing-card.featured:hover{transform:scale(1.04)}
+.pricing-badge{background:var(--vd);color:var(--vl);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;display:inline-block;margin-bottom:16px}
+.pricing-tier{font-size:13px;font-weight:600;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:1px}
+.pricing-price{font-family:'JetBrains Mono',monospace;font-size:40px;font-weight:500;line-height:1;margin-bottom:4px}
+.pricing-price sup{font-size:18px;vertical-align:top;margin-top:8px;display:inline-block;color:var(--t2)}
+.pricing-period{font-size:12px;color:var(--t3);margin-bottom:20px}
+.pricing-annual{font-size:11px;color:var(--g);margin-bottom:20px}
+.pricing-divider{height:1px;background:var(--b);margin:16px 0}
+.pricing-features{list-style:none;margin-bottom:24px}
+.pricing-features li{font-size:13px;color:var(--t2);padding:5px 0;display:flex;align-items:flex-start;gap:8px}
+.pricing-features li::before{content:'✓';color:#34D399;font-weight:700;flex-shrink:0;margin-top:1px}
+.pricing-features li.muted{color:var(--t3)}
+.pricing-features li.muted::before{content:'–';color:var(--t3)}
+.pricing-btn{width:100%;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s}
+.pricing-btn-primary{background:var(--v);color:#fff}
+.pricing-btn-primary:hover{background:var(--vl)}
+.pricing-btn-secondary{background:transparent;color:var(--t2);border:1px solid var(--b2)}
+.pricing-btn-secondary:hover{background:var(--s1);color:var(--t)}
+.annual-note{text-align:center;margin-top:20px;font-size:13px;color:var(--t3)}
+
+/* FAQ */
+.faq{margin-top:48px;max-width:700px;margin-left:auto;margin-right:auto}
+.faq-title{font-size:20px;font-weight:700;text-align:center;margin-bottom:24px}
+.faq-item{border:1px solid var(--b);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.faq-q{padding:16px 20px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;user-select:none;transition:background 0.15s}
+.faq-q:hover{background:var(--s2)}
+.faq-q .arrow{color:var(--v);transition:transform 0.2s;flex-shrink:0;font-size:16px}
+.faq-q.open .arrow{transform:rotate(180deg)}
+.faq-a{max-height:0;overflow:hidden;transition:max-height 0.3s ease,padding 0.3s}
+.faq-a.open{max-height:200px;padding:0 20px 16px}
+.faq-a p{font-size:13px;color:var(--t2);line-height:1.7}
+
+/* BUSINESS PLAN */
+#business{background:var(--bg)}
+.business-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.biz-card{background:var(--s1);border:1px solid var(--b);border-radius:12px;padding:24px}
+.biz-card-title{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.biz-stat{margin-bottom:12px}
+.biz-stat-val{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:500;color:var(--vl)}
+.biz-stat-lbl{font-size:12px;color:var(--t3)}
+.rev-table{width:100%;border-collapse:collapse}
+.rev-table th{font-size:10px;font-weight:600;color:var(--t3);text-align:left;padding:6px 4px;border-bottom:1px solid var(--b);text-transform:uppercase;letter-spacing:0.5px}
+.rev-table td{font-size:13px;padding:7px 4px;border-bottom:1px solid rgba(255,255,255,0.03);font-family:'JetBrains Mono',monospace}
+.rev-table td.month{color:var(--t2);font-family:'Inter',sans-serif;font-size:12px}
+.rev-table td.mrr{color:#34D399}
+.unit-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.unit-label{font-size:12px;color:var(--t2)}
+.unit-val{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:500;color:var(--vl)}
+.unit-val.gold{color:var(--g)}
+.unit-val.green{color:#34D399}
+
+/* GTM */
+#gtm{background:var(--s1)}
+.timeline{position:relative;margin-top:48px;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--v),var(--c),rgba(6,182,212,0.1))}
+.tl-item{position:relative;margin-bottom:40px;padding-left:28px}
+.tl-dot{position:absolute;left:-39px;top:4px;width:16px;height:16px;border-radius:50%;background:var(--v);border:3px solid var(--bg);box-shadow:0 0 12px rgba(124,58,237,0.4)}
+.tl-dot.cyan{background:var(--c);box-shadow:0 0 12px rgba(6,182,212,0.4)}
+.tl-dot.dim{background:var(--t3);border-color:var(--bg)}
+.tl-phase{font-size:11px;font-weight:600;color:var(--v);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.tl-phase.cyan{color:var(--c)}
+.tl-phase.dim{color:var(--t3)}
+.tl-title{font-size:18px;font-weight:700;margin-bottom:8px}
+.tl-target{display:inline-flex;align-items:center;gap:6px;background:var(--vd);border:1px solid rgba(124,58,237,0.2);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--vl);margin-bottom:12px}
+.tl-items{list-style:none}
+.tl-items li{font-size:13px;color:var(--t2);padding:3px 0;display:flex;align-items:flex-start;gap:8px}
+.tl-items li::before{content:'→';color:var(--v);flex-shrink:0}
+
+/* CTA */
+#cta{background:var(--bg);text-align:center}
+.cta-inner{max-width:600px;margin:0 auto}
+.cta-glow{position:relative}
+.cta-glow::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;height:400px;background:radial-gradient(ellipse,rgba(124,58,237,0.15) 0%,transparent 70%);pointer-events:none}
+.cta-headline{font-family:'Syne',sans-serif;font-size:clamp(28px,4vw,48px);font-weight:800;line-height:1.1;margin-bottom:16px;position:relative}
+.cta-sub{font-size:16px;color:var(--t2);margin-bottom:12px;position:relative}
+.cta-ask{font-size:14px;color:var(--t3);margin-bottom:36px;position:relative;font-style:italic}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;position:relative}
+footer{border-top:1px solid var(--b);padding:24px 48px}
+.footer-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.footer-logo{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--v),var(--c));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:12px;color:var(--t3);text-decoration:none}
+.footer-links a:hover{color:var(--t2)}
+.footer-copy{font-size:12px;color:var(--t3)}
+
+/* HIGHLIGHT */
+.highlight-v{color:var(--vl);font-weight:600}
+.highlight-c{color:var(--c);font-weight:600}
+.badge-inline{display:inline-block;background:var(--vd);color:var(--vl);border-radius:4px;padding:2px 7px;font-size:11px;font-weight:600}
+
+@media(max-width:768px){
+  nav{padding:0 20px}
+  section{padding:64px 20px}
+  #hero{padding:120px 20px 80px}
+  .problem-grid,.solution-grid,.pricing-grid,.business-grid{grid-template-columns:1fr}
+  .pricing-card.featured{transform:none}
+  .steps{flex-direction:column;gap:16px}
+  .step-arrow{display:none}
+  footer{padding:20px}
+  .footer-inner{flex-direction:column;gap:12px;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">HOOK</a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#business">Business Plan</a></li>
+      <li><a href="#gtm">GTM</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Book a Demo</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="container">
+    <div class="hero-logo fade-in">HOOK</div>
+    <div class="hero-tagline fade-in">Stop thumbs. Start funnels.</div>
+    <div class="hero-sub fade-in">The AI-powered growth engine for creators who refuse to post blind. See what's trending, write what stops thumbs, publish everywhere — before the wave breaks.</div>
+    <div class="hero-btns fade-in">
+      <a href="#business" class="btn-primary">View Business Plan</a>
+      <a href="../demo/index.html" class="btn-ghost">See Live Demo →</a>
+    </div>
+    <div class="platform-strip fade-in">
+      <span>Works on</span>
+      <span class="p-badge">𝕏 X</span>
+      <span class="p-badge">♪ TikTok</span>
+      <span class="p-badge">▣ Instagram</span>
+      <span class="p-badge">in LinkedIn</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-eyebrow">The Problem</div>
+      <div class="section-headline">Creators are drowning<br>in the wrong questions.</div>
+      <div class="section-sub">The creator economy is worth $250B — but most creators are stuck guessing, posting blind, and watching their content disappear into the void.</div>
+    </div>
+    <div class="problem-grid">
+      <div class="problem-card fade-in">
+        <div class="problem-icon">
+          <svg width="22" height="22" fill="none" stroke="#7C3AED" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="17" r="1" fill="#7C3AED"/></svg>
+        </div>
+        <div class="problem-title">"What should I post today?"</div>
+        <div class="problem-stat"><strong>67%</strong> of creators run out of content ideas at least once a week. Analysis paralysis kills consistency. Consistency kills growth.</div>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-icon">
+          <svg width="22" height="22" fill="none" stroke="#7C3AED" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke-width="2"/><circle cx="12" cy="12" r="3" stroke-width="2"/><line x1="4" y1="4" x2="20" y2="20" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="problem-title">"Is anyone even seeing this?"</div>
+        <div class="problem-stat">Average organic reach dropped <strong>52%</strong> since 2022. Posting without trend intelligence means posting into a shrinking audience.</div>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-icon">
+          <svg width="22" height="22" fill="none" stroke="#7C3AED" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="problem-title">"Why isn't my audience converting?"</div>
+        <div class="problem-stat"><strong>84%</strong> of creators have no structured funnel strategy. They grow followers but can't turn attention into revenue.</div>
+      </div>
+      <div class="problem-card fade-in">
+        <div class="problem-icon">
+          <svg width="22" height="22" fill="none" stroke="#7C3AED" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="problem-title">"When is the best time to post?"</div>
+        <div class="problem-stat">Most creators rely on generic "best times" articles written for global averages. <strong>HOOK knows your data</strong> — and tells you your times.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-eyebrow">The Solution</div>
+      <div class="section-headline">The complete creator<br>growth stack.</div>
+      <div class="section-sub">Four intelligent modules. One compounding loop. Built for creators who treat growth like a discipline.</div>
+    </div>
+    <div class="solution-grid">
+      <div class="solution-card fade-in">
+        <div class="sol-num">01 / TREND ENGINE</div>
+        <div class="sol-title">See what's breaking before it breaks.</div>
+        <div class="sol-desc">Real-time opportunity scores (0–100) across all four platforms. Every trend rated by velocity, relevance to your niche, and saturation. Breaking alerts push to your dashboard before the window closes.</div>
+      </div>
+      <div class="solution-card fade-in">
+        <div class="sol-num">02 / CONTENT STUDIO</div>
+        <div class="sol-title">AI hooks that stop thumbs.</div>
+        <div class="sol-desc">Five proven hook frameworks (Curiosity Gap, Contrarian, Number/List, Personal Stakes, Bold Claim) — AI-generated and tuned to your niche, your voice, and your funnel. 5 variants per session.</div>
+      </div>
+      <div class="solution-card fade-in">
+        <div class="sol-num">03 / CAMPAIGN SCHEDULER</div>
+        <div class="sol-title">Unlimited campaigns. Multiple accounts.</div>
+        <div class="sol-desc">Every campaign has its own niche, funnel type, monetisation model, and automation rules. Connect multiple accounts per platform. Post while you sleep — with a full approval workflow to keep you in control.</div>
+      </div>
+      <div class="solution-card fade-in">
+        <div class="sol-num">04 / ANALYTICS ENGINE</div>
+        <div class="sol-title">Closes the loop. Compounds over time.</div>
+        <div class="sol-desc">Every post is a data point. Hook performance rankings, scheduling optimisation, viral score prediction. The longer you use HOOK, the smarter it gets — weighting future generation toward what actually works for you.</div>
+      </div>
+    </div>
+    <div class="platform-icons fade-in">
+      <span style="font-size:13px;color:var(--t3);margin-right:8px">All four platforms.</span>
+      <span class="p-icon">𝕏 X</span>
+      <span class="p-icon">♪ TikTok</span>
+      <span class="p-icon">▣ Instagram</span>
+      <span class="p-icon">in LinkedIn</span>
+      <span style="font-size:13px;color:var(--t3);margin-left:8px">One dashboard.</span>
+    </div>
+  </div>
+</section>
+
+<!-- WORKFLOW -->
+<section id="workflow">
+  <div class="container">
+    <div class="fade-in" style="text-align:center">
+      <div class="section-eyebrow">The Workflow</div>
+      <div class="section-headline">Five steps. One compounding loop.</div>
+    </div>
+    <div class="steps fade-in">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-title">DISCOVER</div>
+        <div class="step-desc">Trend Engine surfaces what's breaking in your niche</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-title">CREATE</div>
+        <div class="step-desc">AI generates 5 hook variants tailored to the trend</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-title">REFINE</div>
+        <div class="step-desc">Pick your hook, review the full post, adjust if needed</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-title">SCHEDULE</div>
+        <div class="step-desc">Queue across all your accounts and platforms</div>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-title">OPTIMIZE</div>
+        <div class="step-desc">Analytics train the next generation — loop repeats</div>
+      </div>
+    </div>
+    <div class="compound-note fade-in">The loop closes every time a post is analysed. <strong>The longer you use HOOK, the smarter every generation becomes.</strong> It's not a tool — it's a growth engine that learns.</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="fade-in" style="text-align:center">
+      <div class="section-eyebrow">Pricing</div>
+      <div class="section-headline">Start free. Grow into it.</div>
+      <div class="section-sub" style="margin:0 auto">No credit card required to start. Upgrade when the results make it obvious.</div>
+    </div>
+    <div class="pricing-grid">
+      <!-- FREE -->
+      <div class="pricing-card fade-in">
+        <div class="pricing-tier">Free</div>
+        <div class="pricing-price"><sup>£</sup>0</div>
+        <div class="pricing-period">forever</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>1 account per platform</li>
+          <li>1 active campaign</li>
+          <li>30 scheduled posts / month</li>
+          <li>10 AI generation sessions / month</li>
+          <li>Daily trend digest (email)</li>
+          <li>All 5 hook frameworks (MVP)</li>
+          <li>Power Hours scheduling</li>
+          <li>7-day analytics</li>
+          <li>Funnel click tracking</li>
+          <li class="muted">Real-time trend alerts</li>
+          <li class="muted">Automation rules</li>
+          <li class="muted">A/B strategy testing</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-secondary">Get Started Free</button>
+      </div>
+      <!-- CREATOR -->
+      <div class="pricing-card featured fade-in">
+        <div class="pricing-badge">⭐ Most Popular</div>
+        <div class="pricing-tier">Creator</div>
+        <div class="pricing-price"><sup>£</sup><span class="count-price" data-target="19">19</span></div>
+        <div class="pricing-period">per month</div>
+        <div class="pricing-annual">£190/yr — save 2 months</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>3 accounts per platform</li>
+          <li>5 active campaigns</li>
+          <li>300 scheduled posts / month</li>
+          <li>100 AI generation sessions / month</li>
+          <li>Real-time trend dashboard</li>
+          <li>All 5 hook frameworks</li>
+          <li>All scheduling strategies</li>
+          <li>3 automation rules / campaign</li>
+          <li>90-day analytics</li>
+          <li>All funnel types</li>
+          <li>Email support</li>
+          <li class="muted">A/B strategy testing</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-primary">Start Free Trial</button>
+      </div>
+      <!-- PRO -->
+      <div class="pricing-card fade-in">
+        <div class="pricing-tier">Pro</div>
+        <div class="pricing-price"><sup>£</sup><span class="count-price" data-target="49">49</span></div>
+        <div class="pricing-period">per month</div>
+        <div class="pricing-annual">£490/yr — save 2 months</div>
+        <div class="pricing-divider"></div>
+        <ul class="pricing-features">
+          <li>Unlimited accounts</li>
+          <li>Unlimited campaigns</li>
+          <li>Unlimited scheduled posts</li>
+          <li>Unlimited AI sessions</li>
+          <li>Real-time alerts + push notifications</li>
+          <li>All 5 frameworks + custom brand voice</li>
+          <li>A/B strategy testing</li>
+          <li>Unlimited automation rules</li>
+          <li>Full analytics history + CSV export</li>
+          <li>Custom webhooks</li>
+          <li>Priority support + onboarding call</li>
+        </ul>
+        <button class="pricing-btn pricing-btn-primary" style="background:linear-gradient(135deg,var(--v),var(--c))">Go Pro</button>
+      </div>
+    </div>
+    <div class="annual-note fade-in">Annual plans available — save the equivalent of 2 months. USD pricing available: Creator $24/mo · Pro $62/mo</div>
+
+    <!-- FAQ -->
+    <div class="faq fade-in">
+      <div class="faq-title">Common questions</div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Which platforms does HOOK support? <span class="arrow">▾</span></div>
+        <div class="faq-a"><p>HOOK supports X (Twitter), TikTok, Instagram, and LinkedIn. All four platforms are available on every plan. You can connect multiple accounts per platform — 1 on Free, 3 per platform on Creator, and unlimited on Pro.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I really connect multiple accounts per platform? <span class="arrow">▾</span></div>
+        <div class="faq-a"><p>Yes — within each platform's official API terms. Each account connects via its own OAuth flow. Creator tier allows 3 accounts per platform (e.g. 3 X accounts + 3 Instagram accounts). Pro tier is unlimited. Multiple accounts can be assigned to the same or different campaigns.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Can I cancel anytime? <span class="arrow">▾</span></div>
+        <div class="faq-a"><p>Yes. Cancel at any time from your account settings — no questions asked. You'll retain access until the end of your billing period. Annual plans are non-refundable after 14 days but can be cancelled to prevent renewal.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Does HOOK use official platform APIs? <span class="arrow">▾</span></div>
+        <div class="faq-a"><p>Yes. HOOK uses only official APIs: X API v2, TikTok Content Posting API, Instagram Graph API, and LinkedIn API v2. No browser automation, no scraping. Your accounts are safe and compliant.</p></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is HOOK GDPR compliant? <span class="arrow">▾</span></div>
+        <div class="faq-a"><p>Yes. HOOK is built for the UK/EU market. All OAuth tokens are encrypted at rest (AES-256-GCM). You can request a full data export or account deletion at any time from Settings. Data is deleted within 30 days of a deletion request. Full privacy policy available.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BUSINESS PLAN -->
+<section id="business">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-eyebrow">Business Plan</div>
+      <div class="section-headline">Built to scale.</div>
+      <div class="section-sub">A freemium SaaS in a $250B market, with viral acquisition built into the product, a 42:1 LTV:CAC ratio, and a compounding intelligence moat.</div>
+    </div>
+    <div class="business-grid">
+      <!-- MARKET -->
+      <div class="biz-card fade-in">
+        <div class="biz-card-title">
+          <svg width="18" height="18" fill="none" stroke="var(--v)" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><polyline points="12 6 12 12 16 14" stroke-width="2" stroke-linecap="round"/></svg>
+          Market Opportunity
+        </div>
+        <div class="biz-stat">
+          <div class="biz-stat-val">$250B</div>
+          <div class="biz-stat-lbl">Creator economy by 2027 (Goldman Sachs)</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-stat-val">207M</div>
+          <div class="biz-stat-lbl">Creators globally — only 4% use automation tools</div>
+        </div>
+        <div style="height:1px;background:var(--b);margin:14px 0"></div>
+        <div class="biz-stat">
+          <div class="biz-stat-val" style="font-size:16px;color:var(--t2)">TAM</div>
+          <div class="biz-stat-lbl">£2.8B — creator automation tools globally</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-stat-val" style="font-size:16px;color:var(--t2)">SAM</div>
+          <div class="biz-stat-lbl">£420M — English-speaking solo creators</div>
+        </div>
+        <div class="biz-stat">
+          <div class="biz-stat-val" style="font-size:16px;color:var(--vl)">SOM (Yr 3)</div>
+          <div class="biz-stat-lbl">£8.4M ARR — 2% of SAM, 20K creators</div>
+        </div>
+      </div>
+      <!-- REVENUE -->
+      <div class="biz-card fade-in">
+        <div class="biz-card-title">
+          <svg width="18" height="18" fill="none" stroke="var(--v)" viewBox="0 0 24 24"><polyline points="22,7 13.5,15.5 8.5,10.5 2,17" stroke-width="2" stroke-linecap="round"/></svg>
+          Revenue Projections
+        </div>
+        <table class="rev-table">
+          <tr><th>Month</th><th>Creators</th><th>MRR</th></tr>
+          <tr><td class="month">Month 3</td><td class="count-row" data-target="200">200</td><td class="mrr count-row" data-target="1200" data-prefix="£">£1,200</td></tr>
+          <tr><td class="month">Month 6</td><td class="count-row" data-target="800">800</td><td class="mrr count-row" data-target="8000" data-prefix="£">£8,000</td></tr>
+          <tr><td class="month">Month 12</td><td class="count-row" data-target="3500">3,500</td><td class="mrr count-row" data-target="42000" data-prefix="£">£42,000</td></tr>
+          <tr><td class="month">Month 18</td><td class="count-row" data-target="9000">9,000</td><td class="mrr count-row" data-target="126000" data-prefix="£">£126,000</td></tr>
+          <tr><td class="month">Month 24</td><td class="count-row" data-target="20000">20,000</td><td class="mrr count-row" data-target="320000" data-prefix="£">£320,000</td></tr>
+        </table>
+        <div style="margin-top:12px;font-size:10px;color:var(--t3);line-height:1.5">Assumptions: 8% free→paid conversion · £16 avg ARPU · 5% monthly churn</div>
+      </div>
+      <!-- UNIT ECONOMICS -->
+      <div class="biz-card fade-in">
+        <div class="biz-card-title">
+          <svg width="18" height="18" fill="none" stroke="var(--v)" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23" stroke-width="2" stroke-linecap="round"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="2" stroke-linecap="round"/></svg>
+          Unit Economics
+        </div>
+        <div class="unit-row"><span class="unit-label">CAC (affiliate / organic)</span><span class="unit-val">£8</span></div>
+        <div class="unit-row"><span class="unit-label">Avg subscription ARPU</span><span class="unit-val">£16/mo</span></div>
+        <div class="unit-row"><span class="unit-label">Avg creator LTV (18mo)</span><span class="unit-val gold">£342</span></div>
+        <div class="unit-row"><span class="unit-label">LTV : CAC ratio</span><span class="unit-val green">42 : 1</span></div>
+        <div class="unit-row"><span class="unit-label">Gross margin at scale</span><span class="unit-val green">78%</span></div>
+        <div class="unit-row"><span class="unit-label">Break-even (estimate)</span><span class="unit-val">~Month 14</span></div>
+        <div class="unit-row" style="border:none"><span class="unit-label">Monthly churn (target)</span><span class="unit-val">5%</span></div>
+        <div style="margin-top:12px;font-size:10px;color:var(--t3);line-height:1.5">Gross margin driven by Claude API (Haiku for moderation at $0.001/call) and Vercel/Railway infrastructure. Claude generation cost ~£0.015/session — absorbed into Creator+ margin.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GTM -->
+<section id="gtm">
+  <div class="container">
+    <div class="fade-in">
+      <div class="section-eyebrow">Go-To-Market</div>
+      <div class="section-headline">Grow the way we teach<br>creators to grow.</div>
+      <div class="section-sub">Product-led growth. The founder posts daily using HOOK. The product markets itself.</div>
+    </div>
+    <div class="timeline fade-in" style="max-width:680px;margin-top:48px;margin-left:auto;margin-right:auto">
+      <div class="tl-item">
+        <div class="tl-dot"></div>
+        <div class="tl-phase">Phase 1 — Months 1–6</div>
+        <div class="tl-title">Seed: Prove the Value</div>
+        <div class="tl-target">🎯 Target: 500 creators · £8K MRR</div>
+        <ul class="tl-items">
+          <li>Product Hunt launch — free beta, no credit card required</li>
+          <li>Founder posts daily on X + TikTok using HOOK — the product is the marketing</li>
+          <li>"Made with HOOK" optional watermark → +5 AI credits/month incentive</li>
+          <li>30% recurring affiliate commission programme</li>
+          <li>Creator economy newsletter placements (The Publish Press, Creator Economy)</li>
+          <li>Onboarding: 5 minutes sign-up → first post in queue → immediate value</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot cyan"></div>
+        <div class="tl-phase cyan">Phase 2 — Months 7–18</div>
+        <div class="tl-title">Growth: Scale the Flywheel</div>
+        <div class="tl-target" style="background:var(--cd);border-color:rgba(6,182,212,0.2);color:var(--c)">🎯 Target: 5,000 creators · £80K MRR</div>
+        <ul class="tl-items">
+          <li>Agency tier launch — team seats, client campaigns, white-label reports</li>
+          <li>SEO content engine built from HOOK's own anonymised performance data</li>
+          <li>Creator case studies: "From 1K to 10K using HOOK"</li>
+          <li>Podcast sponsorships in creator economy space</li>
+          <li>Expand automation rules engine (full IF/THEN builder)</li>
+          <li>A/B strategy testing unlocked for Pro tier</li>
+        </ul>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot dim"></div>
+        <div class="tl-phase dim">Phase 3 — Months 19–36</div>
+        <div class="tl-title">Scale: Build the Moat</div>
+        <div class="tl-target" style="background:rgba(148,163,184,0.08);border-color:rgba(148,163,184,0.2);color:var(--t3)">🎯 Target: 20,000 creators · £320K MRR</div>
+        <ul class="tl-items">
+          <li>Hook template marketplace — community-built, revenue share model</li>
+          <li>API access tier for developers building on top of HOOK</li>
+          <li>LinkedIn specialisation push — B2B creators, higher LTV segment</li>
+          <li>White-label platform offering for large agencies</li>
+          <li>Series A fundraising with proven unit economics</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="container">
+    <div class="cta-inner fade-in">
+      <div class="cta-glow">
+        <div class="cta-headline">Let's build the future<br>of the creator economy.</div>
+        <div class="cta-sub">HOOK is seeking early strategic partners, angel investment, and design partners who believe the creator economy is the next frontier.</div>
+        <div class="cta-ask">"We're looking for people who've built in this space, understand the creator flywheel, and want to back a team that uses the product every day."</div>
+        <div class="cta-btns">
+          <a href="mailto:hello@usehook.co" class="btn-primary">Book a Demo →</a>
+          <a href="../docs/superpowers/specs/2026-03-27-hook-platform-design.md" class="btn-ghost">Read the Spec</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">HOOK</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">API</a>
+      <a href="mailto:hello@usehook.co">Contact</a>
+    </div>
+    <div class="footer-copy">© 2026 HOOK. Stop thumbs. Start funnels.</div>
+  </div>
+</footer>
+
+<script>
+// Intersection Observer for fade-in
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      // Trigger counters
+      e.target.querySelectorAll('.count-row').forEach(el => {
+        if (!el.dataset.animated) {
+          el.dataset.animated = '1';
+          const target = parseInt(el.dataset.target);
+          const prefix = el.dataset.prefix || '';
+          animateCount(el, target, prefix);
+        }
+      });
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Counter animation
+function animateCount(el, target, prefix) {
+  let start = 0;
+  const duration = 1200;
+  const startTime = performance.now();
+  function update(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const current = Math.round(eased * target);
+    el.textContent = prefix + current.toLocaleString();
+    if (progress < 1) requestAnimationFrame(update);
+  }
+  requestAnimationFrame(update);
+}
+
+// FAQ accordion
+function toggleFaq(el) {
+  const answer = el.nextElementSibling;
+  const isOpen = el.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.faq-q').forEach(q => {
+    q.classList.remove('open');
+    q.nextElementSibling.classList.remove('open');
+  });
+  // Open if was closed
+  if (!isOpen) {
+    el.classList.add('open');
+    answer.classList.add('open');
+  }
+}
+
+// Active nav highlighting on scroll
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? 'var(--vl)' : '';
+  });
+});
+</script>
+</body>
+</html>
