@@ -1,2 +1,4 @@
-// tRPC router — populated in Chunk 4
-export type AppRouter = Record<string, never>;
+export { appRouter } from "./router/index.js";
+export type { AppRouter } from "./router/index.js";
+export { createContext } from "./context.js";
+export { router, publicProcedure, protectedProcedure, creatorProcedure, proProcedure } from "./init.js";
