@@ -1,6 +1,8 @@
 import { router } from "../init.js";
+import { billingRouter } from "./billing.js";
 
-// Routers added incrementally per chunk
-export const appRouter = router({});
+export const appRouter = router({
+  billing: billingRouter,
+});
 
 export type AppRouter = typeof appRouter;
